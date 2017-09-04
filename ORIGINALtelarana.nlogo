@@ -1,23 +1,23 @@
 globals
 [
-xn ; variable inicial ;POBLACION INICIAL
-xn1; variable calculada ;POBLACION ESPERADA
+  xn
+  xn1
 ]
 
 to setup
   ca
-  set xn 5.7 ; valor inicial. Es independiente a las condiciones iniciales
+  set xn 0.2
   reset-ticks
 end
 
-to iteration ;Modulo de iteracion
-  show xn1
-  set xn1 f (xn) ;Aqui se realiza la operación
-  tick; se introduce variable tiempo para poder graficar
+to iteration
+  set xn1 f xn
+  tick
 end
 
-to-report f [x] ;Tengo que reportar y se arma una función aquí. Es como una "procedura"
-  report a * sin (pi * x) ;Regresa el valor de la función
+to-report f[x]
+
+  report a * x * (1 - x)
 end
 
 to go
@@ -52,45 +52,46 @@ ticks
 30.0
 
 SLIDER
-30
-71
-202
-104
+112
+611
+284
+644
 a
 a
 0
-1
-0.3
+4
+3.0
 0.1
 1
 NIL
 HORIZONTAL
 
 PLOT
-268
-28
-742
-433
-Telaraña
+287
+114
+611
+548
+diagrama de telaraña
 xn
 xn1
 0.0
-57.2957795130823
+1.0
 0.0
 1.0
 false
 false
-"" ""
+"" "let x 0\nlet deltaX 1 / 50\n\nrepeat 50\n[\nplotxy x f x\nset x x + deltaX\n]"
 PENS
-"default" 1.0 0 -16777216 true "plotxy 0 0\nplotxy 57.2957795130823 1" ""
-"parabola" 1.0 0 -2674135 true "" "let x 0 ; Define variable x como local\nlet deltaX 1 / 11 ;Donde inicia\n\nrepeat 11 ; Cuantas veces hará esto\n[;Esto es lo que va a repetir\nplotxy x f x ;Va a cambiar el valor de X primero va a graficar plotxy = 0\n;ya que es el primer punto\nset x x + deltaX ;Va a calculat el siguiente valor\n]\n"
+"default" 1.0 0 -16777216 true "plotxy 0 0\nplotxy 1 1" ""
+"pen-1" 1.0 0 -3844592 true "" "Parabola"
+"pen-2" 1.0 0 -13840069 true "" "set xn1 f xn\nplotxy xn xn1\nplotxy xn1 xn1\nset xn xn1"
 
 BUTTON
-41
-186
-104
-219
-setup
+109
+101
+182
+134
+NIL
 setup
 NIL
 1
@@ -103,10 +104,10 @@ NIL
 1
 
 BUTTON
-80
-259
-143
-292
+121
+236
+184
+269
 NIL
 go
 T
@@ -461,20 +462,10 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.2
+NetLogo 6.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
-<experiments>
-  <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">
-    <setup>setup</setup>
-    <go>go</go>
-    <metric>count turtles</metric>
-    <enumeratedValueSet variable="a">
-      <value value="0.2"/>
-    </enumeratedValueSet>
-  </experiment>
-</experiments>
 @#$#@#$#@
 @#$#@#$#@
 default

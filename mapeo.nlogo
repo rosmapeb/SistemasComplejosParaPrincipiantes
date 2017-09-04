@@ -1,26 +1,27 @@
 globals
 [
-xn ; variable inicial ;POBLACION INICIAL
-xn1; variable calculada ;POBLACION ESPERADA
-]
+;a ;parametro del sistema
+x ;Variable de estado x_n (subindice)
+y
+] ;Dar de alta variables globales
+
+;~~~~~~~~~~~~~~Setup procedures
 
 to setup
-  ca
-  set xn 5.7 ; valor inicial. Es independiente a las condiciones iniciales
+  clear-all ;tambien puede escribirse ca
+  set x x0
+  ;set a 2
+  set y x0 + 0.000001
   reset-ticks
 end
 
-to iteration ;Modulo de iteracion
-  show xn1
-  set xn1 f (xn) ;Aqui se realiza la operación
-  tick; se introduce variable tiempo para poder graficar
-end
 
-to-report f [x] ;Tengo que reportar y se arma una función aquí. Es como una "procedura"
-  report a * sin (pi * x) ;Regresa el valor de la función
-end
+;~~~~~~~~~~~~~~Main procedures
 
-to go
+to iteration
+  show x
+  set x (a * x) * (1 - x)
+  set y (a * y) * (1 - y)
   tick
 end
 @#$#@#$#@
@@ -51,73 +52,88 @@ GRAPHICS-WINDOW
 ticks
 30.0
 
+BUTTON
+83
+63
+156
+96
+NIL
+setup
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+83
+144
+178
+177
+NIL
+iteration
+T
+1
+T
+OBSERVER
+NIL
+K
+NIL
+NIL
+1
+
+PLOT
+45
+171
+598
+653
+timeseries
+time
+x  de t
+0.0
+10.0
+0.0
+1.0
+true
+false
+"" ""
+PENS
+"X" 1.0 0 -2674135 true "" "plot x"
+"pen-1" 1.0 0 -14730904 true "" "plot y"
+
 SLIDER
-30
-71
-202
-104
+153
+693
+325
+726
 a
 a
 0
-1
-0.3
+4
+3.6
 0.1
 1
 NIL
 HORIZONTAL
 
-PLOT
-268
-28
-742
-433
-Telaraña
-xn
-xn1
-0.0
-57.2957795130823
-0.0
-1.0
-false
-false
-"" ""
-PENS
-"default" 1.0 0 -16777216 true "plotxy 0 0\nplotxy 57.2957795130823 1" ""
-"parabola" 1.0 0 -2674135 true "" "let x 0 ; Define variable x como local\nlet deltaX 1 / 11 ;Donde inicia\n\nrepeat 11 ; Cuantas veces hará esto\n[;Esto es lo que va a repetir\nplotxy x f x ;Va a cambiar el valor de X primero va a graficar plotxy = 0\n;ya que es el primer punto\nset x x + deltaX ;Va a calculat el siguiente valor\n]\n"
-
-BUTTON
-41
-186
-104
-219
-setup
-setup
-NIL
+SLIDER
+154
+750
+326
+783
+x0
+x0
+0
 1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
+0.6
+0.1
 1
-
-BUTTON
-80
-259
-143
-292
 NIL
-go
-T
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -461,20 +477,10 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.2
+NetLogo 6.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
-<experiments>
-  <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">
-    <setup>setup</setup>
-    <go>go</go>
-    <metric>count turtles</metric>
-    <enumeratedValueSet variable="a">
-      <value value="0.2"/>
-    </enumeratedValueSet>
-  </experiment>
-</experiments>
 @#$#@#$#@
 @#$#@#$#@
 default
