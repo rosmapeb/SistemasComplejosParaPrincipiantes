@@ -6,7 +6,7 @@ xn1; variable calculada ;POBLACION ESPERADA
 
 to setup
   ca
-  set xn 5.7 ; valor inicial. Es independiente a las condiciones iniciales
+  set xn 1 ; valor inicial. Es independiente a las condiciones iniciales
   reset-ticks
 end
 
@@ -60,17 +60,17 @@ a
 a
 0
 1
-0.3
+1.0
 0.1
 1
 NIL
 HORIZONTAL
 
 PLOT
-268
-28
-742
-433
+233
+24
+707
+429
 Telaraña
 xn
 xn1
