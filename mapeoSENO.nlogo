@@ -2,7 +2,8 @@ globals
 [
 ;a ;parametro del sistema
 x ;Variable de estado x_n (subindice)
-seno
+multi
+  seno
 ] ;Dar de alta variables globales
 
 ;~~~~~~~~~~~~~~Setup procedures
@@ -19,9 +20,12 @@ end
 
 to iteration
   ;show x
-  set seno pi * x
-  show seno
+  set multi pi * x
+  ;show multi
+  set seno sin (multi)
+  ;show seno
   set x a * seno
+  show x
   tick
 end
 @#$#@#$#@
@@ -76,7 +80,7 @@ BUTTON
 177
 NIL
 iteration
-NIL
+T
 1
 T
 OBSERVER
@@ -87,10 +91,10 @@ NIL
 1
 
 PLOT
-244
-24
-797
-506
+208
+10
+761
+492
 timeseries
 time
 x  de t
@@ -112,9 +116,9 @@ SLIDER
 a
 a
 0
+100
+50.0
 1
-0.9
-0.1
 1
 NIL
 HORIZONTAL
@@ -128,7 +132,7 @@ x0
 x0
 0
 57.2957795130823
-1.0
+14.6
 0.1
 1
 NIL

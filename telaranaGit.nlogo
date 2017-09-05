@@ -1,27 +1,27 @@
 globals
 [
-xn ; variable inicial ;POBLACION INICIAL
-xn1; variable calculada ;POBLACION ESPERADA
-y
+  xn
+  xn1
 ]
 
 to setup
   ca
-  set xn 5.72957795130823 ; valor inicial. Es independiente a las condiciones iniciales
+  set xn 0.2
   reset-ticks
 end
 
-to iteration ;Modulo de iteracion
+to iteration
   set xn1 f xn
-  show y
-  tick; se introduce variable tiempo para poder graficar
+  tick
 end
 
-to-report f [x] ;Tengo que reportar y se arma una función aquí. Es como una "procedura"
-  ;show x
-  set y a * (sin (x * pi))
-  ;show y
-  report y ;Regresa el valor de la función
+to-report f[x]
+
+  report a * x * (1 - x)
+end
+
+to go
+  tick
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -52,26 +52,26 @@ ticks
 30.0
 
 SLIDER
-30
-71
-202
-104
+112
+611
+284
+644
 a
 a
 0
-1
-1.0
+4
+3.0
 0.1
 1
 NIL
 HORIZONTAL
 
 PLOT
-233
-24
-707
-429
-Telaraña
+274
+39
+598
+473
+diagrama de telaraña
 xn
 xn1
 0.0
@@ -80,19 +80,37 @@ xn1
 1.0
 false
 false
-"" ";let x 0 ; Define variable x como local\n;let deltaX 1 / 50 ;Donde inicia\n\n;repeat 50 ; Cuantas veces hará esto\n;[;Esto es lo que va a repetir\n;plotxy x f x ;Va a cambiar el valor de X primero va a graficar plotxy = 0\n;ya que es el primer punto\n;set x x + deltaX ;Va a calculat el siguiente valor\n;]"
+"" "let x 0\nlet deltaX 1 / 50\n\nrepeat 50\n[\nplotxy x f x\nset x x + deltaX\n]"
 PENS
 "default" 1.0 0 -16777216 true "plotxy 0 0\nplotxy 1 1" ""
-"parabola" 1.0 0 -2674135 true "" "let x 0 ; Define variable x como local\nlet deltaX 1 / 50 ;Donde inicia\n\nrepeat 25 ; Cuantas veces hará esto\n[;Esto es lo que va a repetir\nplotxy x f x ;Va a cambiar el valor de X primero va a graficar plotxy = 0\n;ya que es el primer punto\nset x x + deltaX ;Va a calculat el siguiente valor\n]\n"
+"parabola" 1.0 0 -3844592 true "" "let x 0\nlet deltaX 1 / 50\n\nrepeat 50\n[\nplotxy x f x\nset x x + deltaX\n]"
+"pen-2" 1.0 0 -13840069 true "" "set xn1 f xn\nplotxy xn xn1\nplotxy xn1 xn1\nset xn xn1"
 
 BUTTON
-41
-186
-104
-219
-setup
+109
+101
+182
+134
+NIL
 setup
 NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+121
+236
+184
+269
+NIL
+go
+T
 1
 T
 OBSERVER
@@ -448,16 +466,6 @@ NetLogo 6.0.2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
-<experiments>
-  <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">
-    <setup>setup</setup>
-    <go>go</go>
-    <metric>count turtles</metric>
-    <enumeratedValueSet variable="a">
-      <value value="0.2"/>
-    </enumeratedValueSet>
-  </experiment>
-</experiments>
 @#$#@#$#@
 @#$#@#$#@
 default

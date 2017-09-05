@@ -11,7 +11,7 @@ to setup
   clear-all ;tambien puede escribirse ca
   set x x0
   ;set a 2
-  set y x0 + 0.000001
+  set y x0 ;set y x0 + 0.000001
   reset-ticks
 end
 
@@ -19,9 +19,11 @@ end
 ;~~~~~~~~~~~~~~Main procedures
 
 to iteration
-  show x
-  set x (a * x) * (1 - x)
-  set y (a * y) * (1 - y)
+  set y 1 - x
+  show y
+  ;show x
+  ;set x (a * x) * (1 - x)
+  ;set y (a * y) * (1 - y)
   tick
 end
 @#$#@#$#@
@@ -76,7 +78,7 @@ BUTTON
 177
 NIL
 iteration
-T
+NIL
 1
 T
 OBSERVER
@@ -87,10 +89,10 @@ NIL
 1
 
 PLOT
-45
-171
-598
-653
+205
+10
+758
+492
 timeseries
 time
 x  de t
@@ -106,30 +108,30 @@ PENS
 "pen-1" 1.0 0 -14730904 true "" "plot y"
 
 SLIDER
-153
-693
-325
-726
+10
+234
+182
+267
 a
 a
 0
 4
-3.6
+4.0
 0.1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-154
-750
-326
-783
+8
+282
+180
+315
 x0
 x0
 0
 1
-0.6
+0.9
 0.1
 1
 NIL
@@ -477,7 +479,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0
+NetLogo 6.0.2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
