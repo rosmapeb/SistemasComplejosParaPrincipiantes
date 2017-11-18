@@ -1,0 +1,12 @@
+implementa un sistema de rotaciones bipartita en NetLogo, donde el voto del autómata sigue la regla de la mayoria, esto es, su voto es el voto de la mayoria de sus vecinos (vecindad de Moore, frontera periodica, condiciones iniciales aleatorias y actualización sincrona)
+
+to setup
+  ca
+  ask patches
+  [
+    set pcolor ifelse value (random 100 < initialvote) [yellow][pink]
+  ]
+  
+  
+  reset-ticks
+end
