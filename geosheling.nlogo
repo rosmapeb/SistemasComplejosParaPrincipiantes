@@ -5,7 +5,7 @@ patches-own [id mycolor neighborhood happy?]
 
 to setup
   ca
-  set data gis:load-dataset "DC.shp"
+  set data gis:load-dataset "matamoros.shp"
   gis:set-drawing-color white
   gis:draw data 1
 
@@ -15,12 +15,6 @@ to setup
 end
 
 to setup-patches
-  ;foreach (gis:feature-list-of data)
-  ;[ [x] ->
-   ; if (gis:property-value x "SOC") = "RED" [gis:set-drawing-color red gis:fill x 2]
-    ;if (gis:property-value x "SOC") = "BLUE" [gis:set-drawing-color blue gis:fill x 2]
-    ;if (gis:property-value x "SOC") = "UNOCCUPIED" [gis:set-drawing-color grey gis:fill x 2]
-  ;]
 
   let n 1
   foreach gis:feature-list-of data
@@ -28,14 +22,14 @@ to setup-patches
     let center-point gis:location-of gis:centroid-of x
     ask patch (item 0 center-point)
               (item 1 center-point)
-
     [
       set id n
       set n n + 1
-      set mycolor gis:property-value x "SOC"
-      if mycolor = "RED" [set pcolor red]
-      if mycolor = "BLUE" [set pcolor blue]
-      if mycolor = "UNOCCUPIED" [set pcolor grey]
+      set mycolor gis:property-value x "GMU2010"
+      if mycolor = "Muy bajo" [set pcolor red]
+      if mycolor = "Medio" [set pcolor green]
+      if mycolor = "Muy alto" [set pcolor blue]
+      if mycolor = "Desocupado" [set pcolor grey]
     ]
   ]
 
@@ -87,13 +81,13 @@ end
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-364
-55
-801
-493
+359
+10
+862
+514
 -1
 -1
-13.0
+15.0
 1
 10
 1
@@ -139,7 +133,7 @@ similar-wanted
 similar-wanted
 0
 100
-54.0
+55.0
 1
 1
 NIL
@@ -504,7 +498,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0
+NetLogo 6.0.2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

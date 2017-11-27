@@ -1,113 +1,93 @@
-globals
-[
-  ; (1) RANGO EN EL EJE REAL Y EL IMAGINARIO, OSEA EL PLANO COMPLEJO
-  re-min
-  re-max
-  im-min
-  im-max
+extensions[gis]
 
-  ;(2) SE NECESITA LA TRANSFORMACIÓN LINEAL osea pendiente en x y en y
-  ;(intervalo en eje real y eje imaginario necesitamos dos transformaciones)
-  mx
-  my
-]
-
-patches-own ;(3) define la variable de estado y sus valores,
-;que reserve memoria que va a tener un valor
-;dos valores real e imaginario
-[
-  re
-  im
-  counter ; (4) parametro de color que grafica el numero de iteraciones para saber
-  ;si pertenece o no
-]
+globals [data r]
+patches-own [id mycolor neighborhood happy?]
 
 to setup
-  ca ;(5) define valoes iniciales
-  set re-min -2
-  set re-max 1
-  set im-min -1
-  set im-max 1
+  ca
+  set data gis:load-dataset "toluca.shp"
+  gis:set-drawing-color white
+  gis:draw data 1
 
-  ;(6)mundo de netlogo a mundo complejo
-  transform-world
-  compute-set ;(7) Evalua las C
+  setup-patches
 
   reset-ticks
 end
 
-to linear-transform [a b];(8) depende de dos argumentos, real e imaginaria y los va a transformar, es lqa formula de transformación ES UN ESCALAMIENTO
-  set re mx * (a  - min-pxcor) + re-min ;pxcor es una variable de netlogo que indica el minimo del mundo
-  set im my * (b  - min-pycor) + im-min ;transformacion imaginaria
-  set counter 0 ;inicializa contador en cero
-end
+to setup-patches
 
-to compute-set ;(uiltimo)barrido
+  let n 1
+  foreach gis:feature-list-of data
+  [ [x] ->
+    let center-point gis:location-of gis:centroid-of x
+    ask patch (item 0 center-point)
+              (item 1 center-point)
+    [
+      set id n
+      set n n + 1
+      set mycolor gis:property-value x "GMU2010"
+      if mycolor = "Muy bajo" [set pcolor red]
+      if mycolor = "Medio" [set pcolor green]
+      if mycolor = "Muy alto" [set pcolor blue]
+      if mycolor = "Desocupado" [set pcolor grey]
+    ]
+  ]
+
   ask patches
   [
-    iteration
-    set pcolor counter
+   set happy? false
+  ]
+
+  ask patches with [id != 0]
+  [
+    set r 1
+    set happy? false
+    find-neighbors
+    ;show count neighborhood
   ]
 end
 
-to transform-world ;calcular pendientes y hacer barrido
-  set mx (re-max - re-min) / (max-pxcor - min-pxcor)
-  set my (im-max - im-min) / (max-pycor - min-pycor)
+  to find-neighbors
+    ;let r 1
+    set neighborhood other patches with [id != 0] in-radius r
 
-  ;pide a parches tranformar los valores
-  ask patches
-  [
-   linear-transform pxcor pycor
-   set counter 0
-  ]
+    if count neighborhood = 0
+    [
+      set r r + 1
+      show r
+      find-neighbors
+    ]
+
 end
 
-to iteration ;(ultimo ultimo)agarrar parte imaginaria de cada parche
-  ;let a 0 ;condición inicial z = a + ib ; Mandelbrot
-  let a 0 ;condición inicial z = a + ib ; Mandelbrot
-  let b 0
+    to go
+      ask patches with [id != 0]
+      [
+        let occupied-neighbors count neighborhood with [pcolor != grey]
+        let similar-neighbors count neighborhood with [pcolor = [pcolor] of myself]
 
-  let aux 0
-  while [ (a ^ 2 + b ^ 2) < 4 and counter < 100] ;definir cuantas iteraciones. mientras se cumpla, has ea orden
-  [
-    set aux a
-    set a a ^ 2 - b ^ 2 + re ;parte real
-    set b 2 * aux * b + im ;parte imaginaria
+        if occupied-neighbors != 0
+        [set similar-neighbors 100 * similar-neighbors / occupied-neighbors]
+      set happy? ifelse-value (similar-neighbors >= similar-wanted)
+      [true][false]
+      ]
 
-    set counter counter + 1
+      ask patches with[pcolor != grey and not happy? and id != 0]
+      [
+        ask one-of patches with [pcolor = grey] [set pcolor [pcolor] of myself] set pcolor grey
+      ]
 
-  ]
-end
-
-to zoom
-  if mouse-down? ;? es variable booleana
-  [
-   let delta-x abs (re-max - re-min) ;valor absoluto del tamaño de la ventana en el mundo
-   let delta-y abs (im-max - im-min)
-
-   let x0 mx * (mouse-xcor - min-pxcor) + re-min ;x0 trasladada al plano complejo coordenadas del mouse a plano comlejo
-   let y0 my * (mouse-ycor - min-pycor) + im-min
-
-   set re-min x0 - 0.25 * delta-x ;
-   set re-max x0 + 0.25 * delta-x ;
-   set im-min y0 - 0.25 * delta-y ;
-   set im-max y0 + 0.25 * delta-y ;
-
-   transform-world
-   compute-set
-
-  ]
-
+      tick
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
-10
-819
-620
+364
+55
+702
+394
 -1
 -1
-1.0
+10.0
 1
 10
 1
@@ -117,10 +97,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--300
-300
--300
-300
+-16
+16
+-16
+16
 0
 0
 1
@@ -128,10 +108,10 @@ ticks
 30.0
 
 BUTTON
-62
-115
-135
-148
+80
+70
+153
+103
 NIL
 setup
 NIL
@@ -144,13 +124,28 @@ NIL
 NIL
 1
 
-BUTTON
-66
-207
-135
-240
+SLIDER
+69
+217
+241
+250
+similar-wanted
+similar-wanted
+0
+100
+61.0
+1
+1
 NIL
-zoom
+HORIZONTAL
+
+BUTTON
+90
+129
+153
+162
+NIL
+go
 T
 1
 T
