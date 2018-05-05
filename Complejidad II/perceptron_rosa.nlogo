@@ -75,7 +75,73 @@ to setup-input-node
 end
 
 to compute-activation
+  set activation sign (sum [weight * [activation] of end1] of my-in-links);suma ponderada de vecinos de entrada y enlaces de entrada (my-in-links)
+  recolor
+end
 
+to-report sign [x]
+  report ifelse-value (x >= 0)[1][-1]
+end
+
+to recolor
+  set color ifelse-value (activation = 1) [white][black]
+  ask in-link-neighbors [recolor]
+  resize-recolor-link
+end
+
+to resize-recolor-link
+  ask links
+  [
+    set label precision weight 4
+    set thickness 0.1 * 20 * abs(weight)
+    set color ifelse-value (weight > 0)[red][blue]
+  ]
+end
+
+;;;Main priocedure
+
+to trainning
+  set epoch-error 0
+  repeat examples-per-epoch
+  [
+  ask input-nodes
+    [set activation random-activation]
+  ask perceptron
+    [
+      compute-activation ;cambiar pesos a lo q tenga
+      update-weights target-answer
+      recolor
+    ]
+  ]
+  set epoch-error 0.5 * epoch-error / examples-per-epoch
+end
+
+to-report random-activation
+  report ifelse-value (random 2 = 0) [0][1]
+end
+
+to update-weights [answer]
+
+end
+
+to-report target-answer
+  let a [activation] of input-node-1
+  let b [activation] of input-node-2
+
+  report ifelse-value (run-result (word "my-" target-function " a b"))[1][-1]
+
+end
+
+to-report my-and [a b]
+  report a and b
+end
+
+to-report my-or [a b]
+  report a or b
+end
+
+to-report my-xor [a b]
+  report a xor b
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -121,6 +187,31 @@ NIL
 NIL
 NIL
 1
+
+SLIDER
+50
+122
+253
+155
+examples-per-epoch
+examples-per-epoch
+1
+20
+10.0
+1
+1
+NIL
+HORIZONTAL
+
+CHOOSER
+54
+229
+192
+274
+target-function
+target-function
+"and" "or" "xor"
+0
 
 @#$#@#$#@
 ## WHAT IS IT?
