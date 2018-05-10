@@ -114,6 +114,7 @@ to trainning
     ]
   ]
   set epoch-error 0.5 * epoch-error / examples-per-epoch
+  tick
 end
 
 to-report random-activation
@@ -121,12 +122,20 @@ to-report random-activation
 end
 
 to update-weights [answer]
+  let output-answer activation
+  let output-error (answer - output-answer)
+  set epoch-error epoch-error + (output-error) ^ 2
+  ask my-in-links
+  [
+    set weight weight + learning-rate * output-error * [activation] of end1;learning rate es la ETA
+  ]
+
 
 end
 
 to-report target-answer
-  let a [activation] of input-node-1
-  let b [activation] of input-node-2
+  let a ([activation] of input-node-1 = 1)
+  let b ([activation] of input-node-2 = 1)
 
   report ifelse-value (run-result (word "my-" target-function " a b"))[1][-1]
 
@@ -143,12 +152,26 @@ end
 to-report my-xor [a b]
   report a xor b
 end
+
+to test
+  ask input-node-1 [set activation input-1]
+  ask input-node-2 [set activation input-2]
+
+  let correct-answer target-answer
+  ask perceptron [compute-activation]
+
+  let output-answer [activation] of perceptron
+
+  ifelse output-answer = correct-answer
+  [user-message (word "output: " output-answer "\n " "target: " correct-answer "\n Correct answer!" )]
+  [user-message (word "output: " output-answer "\n " "target: " correct-answer "\n Incorrect answer!" )]
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
-10
-647
-448
+309
+11
+746
+449
 -1
 -1
 13.0
@@ -189,10 +212,10 @@ NIL
 1
 
 SLIDER
-50
-122
-253
-155
+46
+101
+249
+134
 examples-per-epoch
 examples-per-epoch
 1
@@ -204,14 +227,101 @@ NIL
 HORIZONTAL
 
 CHOOSER
-54
-229
-192
-274
+64
+145
+202
+190
 target-function
 target-function
 "and" "or" "xor"
+2
+
+SLIDER
+43
+206
+215
+239
+learning-rate
+learning-rate
 0
+1
+0.001
+0.0001
+1
+NIL
+HORIZONTAL
+
+BUTTON
+151
+39
+247
+72
+NIL
+trainning
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+PLOT
+811
+47
+1011
+197
+epoch error
+t
+epoch-error
+0.0
+10.0
+0.0
+1.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot epoch-error"
+
+CHOOSER
+66
+278
+204
+323
+input-1
+input-1
+-1 1
+0
+
+CHOOSER
+67
+340
+205
+385
+input-2
+input-2
+-1 1
+0
+
+BUTTON
+75
+415
+138
+448
+NIL
+test
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
